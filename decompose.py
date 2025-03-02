@@ -1,35 +1,17 @@
-#Doolitle Algorithm
-def luDecomposition(mat):
-    n = len(mat)
+def luDecomposition(A):
+    # Initialize L and U matrices
+    n = len(A)
+    L = [[0]*n for _ in range(n)]
+    U = [[0]*n for _ in range(n)]
 
-    # инициализация
-    lower = [[0] * n for i in range(n)]
-    upper = [[0]* n for x in range(n)]
-
+    # Compute L and U
     for i in range(n):
-        # upper
-        for k in range(i, n):
-            # L(i, j) * U(j, k)
-            sum = 0
-            for j in range(i):
-                sum += (lower[i][j] * upper[j][k])
-
-            # U(i, k)
-            upper[i][k] = mat[i][k] - sum
-
-        # lower
-        for k in range(i, n):
-            if (i == k):
-                lower[i][i] = 1  # Diagonal as 1
+        for j in range(i, n):  # U
+            U[i][j] = A[i][j] - sum(L[i][k]*U[k][j] for k in range(i))
+        for j in range(i, n):  # L
+            if i == j:
+                L[i][i] = 1  # Diagonal as 1
             else:
-                # L(k, j) * U(j, i)
-                sum = 0
-                for j in range(i):
-                    sum += (lower[k][j] * upper[j][i])
+                L[j][i] = (A[j][i] - sum(L[j][k]*U[k][i] for k in range(i))) / U[i][i]
 
-                # L(k, i)
-                lower[k][i] = int((mat[k][i] - sum) /
-                                  upper[i][i])
-                
-    # возвращем L, U
-    return lower, upper
+    return L, U
