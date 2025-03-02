@@ -4,8 +4,6 @@ def isLuValid(A, L, U):
     # умножаем
     LU = np.dot(L, U)
     # сравниваем с погрешностью
-    print(LU)
-    print(A)
     if np.allclose(A, LU):
         return True
     else:
